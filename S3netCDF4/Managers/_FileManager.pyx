@@ -567,12 +567,12 @@ class FileManager(object):
 
             elif (self._open_files[key].open_state ==
                   OpenFileRecord.KNOWN_EXISTS_ON_DISK):
-                # check there are enough filehandles to reopen the file
                 # reassign write to append
                 if mode == "w":
                     open_mode = "a"
                 else:
                     open_mode = mode
+                # check there are enough filehandles to reopen the file
                 if FileManager.__file_greater_than_filehandles():
                     self.__shuffle_files_filehandle()
 

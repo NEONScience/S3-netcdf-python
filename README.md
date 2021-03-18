@@ -417,8 +417,7 @@ Choosing `format="CFA3"` or `format="CFA4"` when creating a file creates a
 CFA-compliant netCDF file.  This consists of a **master-array** file and a
 number of **sub-array** files.
 The version of CFA to use can also be specified, either `cfa_version="0.4"` or
-`cfa_version="0.5"`.  `"0.4"` follows the
-[CFA conventions](http://www.met.reading.ac.uk/~david/cfa/0.4/), where the
+`cfa_version="0.5"`.  `"0.4"` follows the [CFA conventions](http://www.met.reading.ac.uk/~david/cfa/0.4/), where the
 **sub-array** metadata is written into the attributes of the netCDF variables.
 `"0.5"` refactors the **sub-array** metadata into extra groups and variables
 in the **master-array** file.  `"0.5"` is the preferred format as it is more

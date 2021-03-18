@@ -1,33 +1,5 @@
 @startuml
 
-package netCDF4 #linen {
-
-    class Dataset #dodgerblue {
-        +groups : Dictionary<Group>
-        +dimensions : Dictionary<Dimension>
-        +variables : Dictionary<Variable>
-    }
-
-    class Group #deepskyblue {
-        +dimensions : Dictionary<Dimension>
-        +variables : Dictionary<Variable>
-    }
-
-    class Dimension #darkturquoise {
-
-    }
-
-    class Variable #cyan {
-
-    }
-    Dataset "1" *-- Group
-    Dataset "1" *-- Variable
-    Dataset "1" *-- Dimension
-
-    Group "1" *-- Variable
-    Group "1" *-- Dimension
-}
-
 package "S3netCDF4" as s3netcdf {
     together {
         class s3Dataset #dodgerblue {
@@ -62,57 +34,6 @@ package "S3netCDF4" as s3netcdf {
 
         s3Group "1" *-- s3Variable
         s3Group "1" *-- s3Dimension
-    }
-
-    package "CFA" as cfa #linen {
-        class CFADataset #dodgerblue {
-            +cfa_groups : Dictionary<CFAGroups>
-        }
-        class CFAGroup #deepskyblue {
-            +cfa_dims : Dictionary<CFADimension>
-            +cfa_vars : Dictionary<CFAVariable>
-        }
-        class CFAVariable #cyan {
-            +nc_partition_group : Group
-        }
-        class CFADimension #darkturquoise {
-
-        }
-        CFAGroup --* "1" CFADataset
-        CFADimension --* "1" CFAGroup
-        CFAVariable --* "1" CFAGroup
-
-        package Parsers #lemonchiffon{
-            class CFAParser #gainsboro {
-
-            }
-            class CFAnetCDFParser #gray {
-
-            }
-            CFAnetCDFParser <-- CFAParser
-        }
-    }
-
-    s3Dataset "1" *-- "1" CFADataset
-    s3Dimension "1" *-- "1" CFADimension
-    s3Group "1" *-- "1" CFAGroup
-    s3Variable "1" *-- "1" CFAVariable
-
-    package "Backends" as backends #lightyellow {
-        class BufferedIOBase #orangered {
-
-        }
-
-        class s3FileObject #orange {
-            -connection_pool : ConnectionPool
-            -config : Config
-        }
-
-        class s3aioFileObject #orange {
-            -connection_pool : ConnectionPool
-            -config : Config
-        }
-        BufferedIOBase <-- s3FileObject
     }
 
     package "Managers" as managers #oldlace {
@@ -157,13 +78,91 @@ package "S3netCDF4" as s3netcdf {
         FileManager "1" *-- OpenArrayRecord
         FileManager "1" *-- OpenFileRecord
     }
-    FileManager -- Config
-
-    s3aioFileObject -- ConnectionPool
-    s3FileObject -- ConnectionPool
-    Config -- s3aioFileObject  
-    Config -- s3FileObject
 }
+
+package netCDF4 #linen {
+    together {
+        class Dataset #dodgerblue {
+            +groups : Dictionary<Group>
+            +dimensions : Dictionary<Dimension>
+            +variables : Dictionary<Variable>
+        }
+
+        class Group #deepskyblue {
+            +dimensions : Dictionary<Dimension>
+            +variables : Dictionary<Variable>
+        }
+
+        class Dimension #darkturquoise {
+
+        }
+
+        class Variable #cyan {
+
+        }
+        Dataset "1" *-- Group
+        Dataset "1" *-- Variable
+        Dataset "1" *-- Dimension
+
+        Group "1" *-- Variable
+        Group "1" *-- Dimension
+    }
+}
+
+package "CFA" as cfa #linen {
+    together {
+        class CFADataset #dodgerblue {
+            +cfa_groups : Dictionary<CFAGroups>
+        }
+        class CFAGroup #deepskyblue {
+            +cfa_dims : Dictionary<CFADimension>
+            +cfa_vars : Dictionary<CFAVariable>
+        }
+        class CFAVariable #cyan {
+            +nc_partition_group : Group
+        }
+        class CFADimension #darkturquoise {
+
+        }
+    }
+    CFAGroup --* "1" CFADataset
+    CFADimension --* "1" CFAGroup
+    CFAVariable --* "1" CFAGroup
+
+    package Parsers #lemonchiffon{
+        class CFAParser #gainsboro {
+
+        }
+        class CFAnetCDFParser #gray {
+
+        }
+        CFAnetCDFParser <-- CFAParser
+    }
+}
+
+package "Backends" as backends #lightyellow {
+    class BufferedIOBase #orangered {
+
+    }
+
+    class s3FileObject #orange {
+        -connection_pool : ConnectionPool
+        -config : Config
+    }
+
+    class s3aioFileObject #orange {
+        -connection_pool : ConnectionPool
+        -config : Config
+    }
+    BufferedIOBase <-- s3FileObject
+}
+
+FileManager -- Config
+
+s3aioFileObject -- ConnectionPool
+s3FileObject -- ConnectionPool
+Config -- s3aioFileObject  
+Config -- s3FileObject
 
 s3aioFileObject -- FileManager
 s3FileObject -- FileManager
@@ -176,7 +175,13 @@ s3Group  "1" *-- "1" Group
 s3Dimension "1" *-- "1" Dimension
 s3Variable  "1" *-- "1" Variable
 
+s3Dataset "1" *-- "1" CFADataset
+s3Dimension "1" *-- "1" CFADimension
+s3Group "1" *-- "1" CFAGroup
+s3Variable "1" *-- "1" CFAVariable
+
 s3Dataset -- FileManager
 's3Variable -- FileManager
+
 
 @enduml

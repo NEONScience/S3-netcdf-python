@@ -40,8 +40,8 @@ def copy_vars(nc_object, s3_object, subarray_size, subarray_shape=[]):
         # create the variable - the createVariable method needs to distinguish
         # between whether the shape or size has been passed in
         # Also, if the subarray_shape has been passed in then only attempt to
-        # do it for variables with the same number of dimensions as the subarray
-        # shape.
+        # do it for variables with the same number of dimensions as the
+        # subarray shape.
         use_shape = False
         if subarray_shape!=[]:
             shape_list = [int(x) for x in subarray_shape.strip("[]").split(",")]
