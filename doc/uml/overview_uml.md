@@ -1,5 +1,7 @@
 @startuml
 
+left to right direction
+
 package "S3netCDF4" as s3netcdf {
     together {
         class s3Dataset #dodgerblue {
